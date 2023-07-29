@@ -26,29 +26,29 @@ namespace astra {
 
         virtual IArchetype* copy(astra::entity entity) = 0;
 
-		template <typename ComponentType>
-		astra::component_vector<ComponentType>* get_component_vector()
-		{
-			return static_cast<astra::component_vector<ComponentType>*>(
-				data.at(typeid(ComponentType).name())
-				);
-		}
+        template <typename ComponentType>
+        astra::component_vector<ComponentType>* get_component_vector()
+        {
+            return static_cast<astra::component_vector<ComponentType>*>(
+                data.at(typeid(ComponentType).name())
+                );
+        }
 
-		template<class ComponentType>
-		void register_component_type()
-		{
-			std::string name = typeid(ComponentType).name();
+        template<class ComponentType>
+        void register_component_type()
+        {
+            std::string name = typeid(ComponentType).name();
 
-			types.insert(name);
+            types.insert(name);
 
-			astra::component_vector<ComponentType>* components = new astra::component_vector<ComponentType>();
-			data[name] = components;
-		}
+            astra::component_vector<ComponentType>* components = new astra::component_vector<ComponentType>();
+            data[name] = components;
+        }
 
-		std::set<std::string>       types;
+        std::set<std::string>       types;
         std::vector<astra::entity>  entities;
-		std::queue<entity>          free_list;
-		astra::component_map        data;
+        std::queue<entity>          free_list;
+        astra::component_map        data;
     private:
     };
 
@@ -67,17 +67,17 @@ namespace astra {
             entities = std::vector<astra::entity>();
             free_list = std::queue<astra::entity>();
 
-			data = component_map();			
+            data = component_map();
             for (auto [key, val] : other.data)
-				data[key] = val->copy(entity);
+                data[key] = val->copy(entity);
 
-			
+
         }
 
         /**
-         * Create and Return an entity. 
+         * Create and Return an entity.
          *
-         * Takes the given components 
+         * Takes the given components
          *
          * @param values Container whose values are summed.
          * @return sum of `values`, or 0.0 if `values` is empty.
@@ -88,10 +88,10 @@ namespace astra {
             // No Entities have been deleted, just add everything to the back
             if (free_list.empty())
             {
-				(add_component(components), ...);
-				astra::entity ent = astra::entity(entities.size(), types, 0);
-				entities.push_back(ent);
-				return ent;
+                (add_component(components), ...);
+                astra::entity ent = astra::entity(entities.size(), types, 0);
+                entities.push_back(ent);
+                return ent;
             }
 
             // An entity has been deleted, we need to update everything at that position
@@ -120,11 +120,11 @@ namespace astra {
             return entities.size();
         }
 
-		IArchetype* copy(astra::entity entity) override
-		{
+        IArchetype* copy(astra::entity entity) override
+        {
             IArchetype* new_copy = new astra::archetype<Types...>(*this, entity);
             return new_copy;
-		}
+        }
 
     private:
 
@@ -140,9 +140,9 @@ namespace astra {
         template<class ComponentType>
         void add_component(size_t index, ComponentType component)
         {
-			std::string name = typeid(ComponentType).name();
-			astra::component_vector<ComponentType>* components =
-				static_cast<astra::component_vector<ComponentType>*>(data.at(name));
+            std::string name = typeid(ComponentType).name();
+            astra::component_vector<ComponentType>* components =
+                static_cast<astra::component_vector<ComponentType>*>(data.at(name));
             components->data[index] = component;
         }
     };
