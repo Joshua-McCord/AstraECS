@@ -10,9 +10,9 @@ namespace astra
             id(id), type(type), generation(generation), is_alive(true) { }
 
 
-        size_t					 id;
-        std::set<std::string>    type;
-        uint32_t				 generation;
-        bool					 is_alive;
+        size_t				    id;
+        std::set<std::string>   type;
+        uint32_t			    generation;
+        bool                    is_alive;
     };
 }
