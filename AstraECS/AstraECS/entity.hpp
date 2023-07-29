@@ -12,7 +12,7 @@ namespace astra
 
         size_t                  id;
         std::set<std::string>   type;
-        uint32_t			    generation;
+        uint32_t                generation;
         bool                    is_alive;
     };
 }
