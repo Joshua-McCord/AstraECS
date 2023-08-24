@@ -13,12 +13,16 @@
 
 int main(void)
 {
-	//size_t num_entities = 500000;
+	//size_t num_entities = 250000 / 2;
 	size_t num_entities = 5;
-	Tester tester;
-	tester.test_astra(num_entities);
-	tester.test_entt(num_entities);
-	//tester.test();
-	//tester.test_astra_entity_creation(num_entities);
-	tester.test_astra_entity_deletion(num_entities);
+	
+	Tests::add_component_creates_new_archetype();
+
+	Tests::remove_component_creates_new_archetype();
+	Tests::remove_component_replaces_deleted_entity();
+
+	//Tests::benchmark_astra(num_entities);
+	//Tests::benchmark_entt(num_entities);
+	Tests::test_at_method();
+
 }

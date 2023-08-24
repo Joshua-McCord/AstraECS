@@ -10,17 +10,21 @@
 #include "../Components/sprite_component.h"
 #include "../Components/transform_component.h"
 
-class Tester
+namespace Tests
 {
-public:
-
-
-	// EnTT
-	void test_entt(size_t num_entities);
-
 	// Astra
-	void test_astra(size_t num_entities);
-	void test_astra_entity_creation(size_t num_entities);
-	void test_astra_entity_deletion(size_t num_entities);
+	void test_entity_creation();
+	void test_entity_deletion();
+	void benchmark_entt(size_t num_entities);
+	void benchmark_astra(size_t num_entities);
+	
+	void add_component_replaces_deleted_entity();
+	void add_component_creates_new_archetype();
 
+	void remove_component_creates_new_archetype();
+	void remove_component_replaces_deleted_entity();
+
+	void test_views_with_enumerate(size_t num_entities);
+
+	void test_at_method();
 };

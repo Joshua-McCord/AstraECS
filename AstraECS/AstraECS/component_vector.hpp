@@ -7,7 +7,9 @@ namespace astra {
     struct IComponentVector
     {
         virtual void erase(size_t index) = 0;
-        virtual IComponentVector* copy(astra::entity entity) = 0;
+        virtual IComponentVector* copy(astra::entity& entity) = 0;
+        virtual void transfer_component(IComponentVector* old, astra::entity& entity) = 0;
+        virtual void transfer_component(IComponentVector* old, astra::entity& entity, size_t insertion_point) = 0;
     };
 
     template<class T>
@@ -33,7 +35,7 @@ namespace astra {
             data.erase(data.begin() + index);
         }
 
-        IComponentVector* copy(astra::entity entity) override
+        IComponentVector* copy(astra::entity& entity) override
         {
             IComponentVector* new_component_vector =
                 new component_vector<T>(*this, entity);
@@ -42,6 +44,20 @@ namespace astra {
                 new_component_vector)->data.push_back(data[entity.id]);
 
             return new_component_vector;
+        }
+
+        void transfer_component(IComponentVector* old, astra::entity& entity) override
+        {
+            astra::component_vector<T>* casted_component_vector = static_cast<astra::component_vector<T>*>(old);
+            T element = casted_component_vector->data[entity.id];
+            data.push_back(element);
+        }
+
+        void transfer_component(IComponentVector* old, astra::entity& entity, size_t insertion_point) override
+        {
+            astra::component_vector<T>* casted_component_vector = static_cast<astra::component_vector<T>*>(old);
+            T element = casted_component_vector->data[entity.id];
+            data[insertion_point] = element;
         }
 
         std::vector<T> data;
