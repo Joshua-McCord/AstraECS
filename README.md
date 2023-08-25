@@ -52,7 +52,7 @@ struct PhysicsComponent
     glm::vec2 acc;
 };
 
-struct move_system
+namespace move_system
 {
     void tick(astra::registry& registry, float dt)
     {
@@ -79,6 +79,6 @@ int main() {
     }
 
     while(true)
-        move_system.tick(registry, dt);
+        move_system::tick(registry, dt);
 }
 ```
