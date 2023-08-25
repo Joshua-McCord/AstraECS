@@ -12,14 +12,6 @@
 straight-forward API, and leverages modern data storage philosophies to allow the quick creation, 
 iteration, updating, and deleting of Entities. 
 
-
-> Disclaimer: As of July 28, 2023, this project is still a work in progress. I would NOT recommend adding this
-> into a serious game or engine right now. I do believe in just a little while this will be a shippable system,
-> but there are too many features missing or features not fleshed out. Once I feel confident enough in Astra
-> itself, I will remove this disclaimer. If you are interested in Astra, then I do believe the current build is
-> a good base to start from and you can feel confident in forking the project and adding your own features! 
-> -- jcm
-
 # Table of Contents
 
 * [Introduction](#introduction)
@@ -39,12 +31,8 @@ My current engine's ECS is reminiscent of a traditional `SoA` and each `Componen
 as a `std::vector<std::optional<T>>`. Each Entity had an associated bit flag, and if the bit flag was
 set, then that component existed (e.g. if TRANSFORM_FLAG was set, the Entity had a TransformComponent). 
 This was fine and let me bootstrap a small engine/game, but quickly grew slow and not enjoyable
-to work with. I loved `EnTT`'s API, and any attempt to convert my homespun ECS's API into 
-something similar quickly fell apart. One day I decided to take a break from my game
-and put some serious thought into an ECS. I've read a lot about Unity's 
-DOTS and wanted an ECS that had the API of EnTT/STL but handled Entity storage like DOTS. 
-The result is `Astra`. An ECS that uses Archetypes as storage, and the Range-V3 
-library to quickly iterate through all the entities. 
+to work with. As I kept using my ECS, I realized I wanted something like an STL container but for Entities. 
+Thus I settled on the final API for `Astra`. Most operations that you are familiar with in the STL exist in `Astra`.
 
 ## Example Usage
 
@@ -87,7 +75,7 @@ int main() {
     {
         auto xform = PositionComponent(glm::vec2(i));
         auto physx = PhysicsComponent(glm::vec2(0.1f), glm::vec2(0.1f));
-        registry.insert<PositionComponent, PhysicsComponent>(xform, physx);
+        registry(xform, physx);
     }
 
     while(true)
