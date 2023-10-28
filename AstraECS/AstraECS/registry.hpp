@@ -180,7 +180,7 @@ namespace astra
         inline void erase(astra::entity& entity)
         {
             for (auto& arch : archetypes)
-                if (arch->types == entity.type)\
+                if (arch->types == entity.type)
                     arch->erase(entity);
 
             _size--;
