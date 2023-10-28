@@ -16,6 +16,14 @@ namespace astra {
     class IArchetype {
     public:
 
+        IArchetype() { }
+
+        ~IArchetype()
+        {
+            for (auto [key, ivec] : this->data)
+                delete ivec;
+        }
+
         /**
         * Erases the entity from all Component Vectors
         *
@@ -99,9 +107,7 @@ namespace astra {
                 auto old_vector = old_archetype->data[key];
                 new_vector->transfer_component(old_vector, entity, insertion_point);
             }
-            // It should just be added to the back since we just got done 
             add_component(insertion_point, component);
-            //entities.push_back(entity);
             entities[insertion_point] = entity;
             return insertion_point;
         }
@@ -156,9 +162,6 @@ namespace astra {
         template<class... ComponentTypes>
         auto at(astra::entity& entity)
         {
-            /*std::set<std::string> type_set = {typeid(Types).name()...};
-            std::tuple<Types> entity = std::make_tuple<Types...>
-            return ent;*/
             auto ent = data
                 | ranges::views::filter([=](auto entry) {
                         std::set<std::string> type_set = { typeid(ComponentTypes).name()... };
@@ -181,7 +184,7 @@ namespace astra {
         std::vector<astra::entity>  entities;
         std::queue<entity>          free_list;
         std::set<size_t>            free_set;
-        astra::component_map        data;
+        component_map        data;
     private:
     };
 

@@ -2,7 +2,7 @@
 #include <optional>
 #include <algorithm>
 #include <spdlog/spdlog.h>
-#include <range/v3/all.hpp>
+#include <range/v3/view.hpp>
 #include "entity.hpp"
 #include "archetype.hpp"
 #include "component_vector.hpp"
@@ -20,7 +20,8 @@ namespace astra
 
         ~registry()
         {
-            // TODO Call delete on all the Archetypes?
+            for(auto archetype : archetypes)
+                delete archetype;
         }
 
         template<class ...ComponentTypes>
@@ -28,18 +29,18 @@ namespace astra
         {
             return archetypes
                 | ranges::views::remove_if([=](IArchetype* a) {
-                std::set<std::string> types_set = std::set<std::string>{ typeid(ComponentTypes).name()... };
-                return !std::includes(a->types.begin(), a->types.end(), types_set.begin(), types_set.end());
+                    std::set<std::string> types_set = std::set<std::string>{ typeid(ComponentTypes).name()... };
+                        return !std::includes(a->types.begin(), a->types.end(), types_set.begin(), types_set.end());
                     })
                 | ranges::views::transform([=](astra::IArchetype* a) {
                         return ranges::views::zip((a->entities),
                         a->get_component_vector<ComponentTypes>()->data...
                         )
-                    | ranges::views::filter([=](auto&& e) {
+                | ranges::views::filter([=](auto&& e) {
                         return ranges::get<0>(e).is_alive;
                         });
                     })
-                        | ranges::views::join;
+                | ranges::views::join;
         }
 
         template<class ...ComponentTypes>
@@ -199,13 +200,17 @@ namespace astra
         template<class... Types>
         auto at(astra::entity& entity)
         {
+            astra::IArchetype* entity_arch = nullptr;
             for (auto* arch : archetypes)
             {
                 if (arch->types == entity.type)
                 {
-                    return arch->at<Types...>(entity);
+                    entity_arch = arch;
+                    break;
                 }
             }
+            assert(entity_arch != nullptr);
+            return entity_arch->at<Types...>(entity);
         }
 
     private:

@@ -14,15 +14,15 @@
 int main(void)
 {
 	//size_t num_entities = 250000 / 2;
-	size_t num_entities = 5;
+	size_t num_entities = 100000;
 	
 	Tests::add_component_creates_new_archetype();
 
 	Tests::remove_component_creates_new_archetype();
 	Tests::remove_component_replaces_deleted_entity();
 
-	//Tests::benchmark_astra(num_entities);
-	//Tests::benchmark_entt(num_entities);
+	Tests::benchmark_astra(num_entities);
+	Tests::benchmark_entt(num_entities);
 	Tests::test_at_method();
 
 }

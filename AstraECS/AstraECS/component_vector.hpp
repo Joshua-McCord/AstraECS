@@ -4,6 +4,7 @@
 #include "entity.hpp"
 
 namespace astra {
+
     struct IComponentVector
     {
         virtual void erase(size_t index) = 0;
